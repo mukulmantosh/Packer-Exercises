@@ -7,7 +7,6 @@ source "amazon-ebs" "nginx-server-packer" {
   tags = {
     Release       = "NGINX-Packer"
     Base_AMI_Name = "{{ .SourceAMIName }}"
-    Extra         = "{{ .SourceAMITags.TagName }}"
   }
 
 
