@@ -1,18 +1,37 @@
-source "amazon-ebs" "nginx-server-packer" {
-  ami_name                    = "nginx-dev-{{timestamp}}"
-  ami_description             = "AWS Instance Image Created by Packer on {{timestamp}}"
-  instance_type               = "c6g.medium"
-  region                      = "ap-south-1"
-  security_group_id           = "sg-064ad8064cf203657"
-  tags = {
-    Release       = "NGINX-Packer"
-    Base_AMI_Name = "{{ .SourceAMIName }}"
+variable "ami_name" {
+  type        = string
+  description = "The name of the newly created AMI"
+  default     = "nginx-dev-{{timestamp}}"
+}
+
+variable "security_group" {
+  type        = string
+  description = "SG specific for Packer"
+  default     = "sg-064ad8064cf203657"
+}
+
+variable "tags" {
+  type = map(string)
+  default = {
+    "Name" : "UbuntuImage-{{timestamp}}"
+    "Environment" : "Production"
+    "OS_Version" : "Ubuntu 20"
+    "Release" : "Latest"
+    "Created-By" : "Packer"
   }
+}
+source "amazon-ebs" "nginx-server-packer" {
+  ami_name          = var.ami_name
+  ami_description   = "AWS Instance Image Created by Packer on {{timestamp}}"
+  instance_type     = "c6g.medium"
+  region            = "ap-south-1"
+  security_group_id = var.security_group
+  tags              = var.tags
 
 
   source_ami_filter {
     filters = {
-      name                = "nginx-latest-base-2"
+      name                = "nginx_base"
       root-device-type    = "ebs"
       virtualization-type = "hvm"
     }
@@ -31,4 +50,21 @@ build {
   sources = [
     "source.amazon-ebs.nginx-server-packer"
   ]
+
+  provisioner "shell" {
+    inline = [
+      "sudo yum update -y",
+    ]
+  }
+
+  provisioner "shell" {
+    script       = "./scripts/build.sh"
+    pause_before = "10s"
+    timeout      = "300s"
+  }
+
+  error-cleanup-provisioner "shell" {
+    inline = ["echo 'update provisioner failed' > packer_log.txt"]
+  }
+
 }
