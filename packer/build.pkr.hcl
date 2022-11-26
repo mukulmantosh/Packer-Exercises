@@ -41,9 +41,6 @@ source "amazon-ebs" "nginx-server-packer" {
       virtualization-type = "hvm"
     }
 
-
-
-
     most_recent = true
     owners      = ["self"]
   }
