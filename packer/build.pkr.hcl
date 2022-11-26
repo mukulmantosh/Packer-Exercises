@@ -1,7 +1,7 @@
 variable "ami_name" {
   type        = string
   description = "The name of the newly created AMI"
-  default     = "nginx-dev-{{timestamp}}"
+  default     = "fastapi-nginx-ami-{{timestamp}}"
 }
 
 variable "security_group" {
@@ -13,9 +13,9 @@ variable "security_group" {
 variable "tags" {
   type = map(string)
   default = {
-    "Name" : "UbuntuImage-{{timestamp}}"
+    "Name" : "FastAPI-NGINX-AMI-{{timestamp}}"
     "Environment" : "Production"
-    "OS_Version" : "Ubuntu 20"
+    "OS_Version" : "Amazon Linux 2"
     "Release" : "Latest"
     "Created-By" : "Packer"
   }
@@ -31,7 +31,7 @@ source "amazon-ebs" "nginx-server-packer" {
 
   source_ami_filter {
     filters = {
-      name                = "nginx_base"
+      name                = "FastAPI_Base_Image"
       root-device-type    = "ebs"
       virtualization-type = "hvm"
     }
@@ -61,6 +61,16 @@ build {
     script       = "./scripts/build.sh"
     pause_before = "10s"
     timeout      = "300s"
+  }
+
+  provisioner "file" {
+    source      = "./scripts/fastapi.conf"
+    destination = "/tmp/fastapi.conf"
+  }
+
+
+  provisioner "shell" {
+    inline = ["sudo mv /tmp/fastapi.conf /etc/nginx/conf.d/fastapi.conf"]
   }
 
   error-cleanup-provisioner "shell" {
