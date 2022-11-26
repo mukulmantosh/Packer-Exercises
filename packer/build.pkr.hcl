@@ -17,7 +17,7 @@ variable "tags" {
     "Environment" : "Production"
     "OS_Version" : "Amazon Linux 2"
     "Release" : "Latest"
-    "Created-By" : "Packer"
+    "Creator" : "Packer"
   }
 }
 source "amazon-ebs" "nginx-server-packer" {
@@ -28,6 +28,11 @@ source "amazon-ebs" "nginx-server-packer" {
   security_group_id = var.security_group
   tags              = var.tags
 
+  run_tags        = var.tags
+  run_volume_tags = var.tags
+  snapshot_tags   = var.tags
+
+
 
   source_ami_filter {
     filters = {
@@ -37,10 +42,14 @@ source "amazon-ebs" "nginx-server-packer" {
     }
 
 
+
+
     most_recent = true
     owners      = ["self"]
   }
   ssh_username = "ec2-user"
+
+
 
 }
 
