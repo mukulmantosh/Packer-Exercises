@@ -1,6 +1,6 @@
 # Packer Exercises
 
-![stack](./misc/stack.png)
+![stack](./misc/stack.jpg)
 
 
 Welcome to the Packer Tutorial.
