@@ -18,6 +18,11 @@ Packer installed in your machine.
 - [x] [Packer](https://www.packer.io/) - Packer is a free and open source tool for creating golden images for multiple platforms from a single source configuration.
 
 
+### Blog
+
+For in-depth, follow this tutorial 
+
+- [Streamlining AMIs using Packer, Vault & GitHub Actions](https://dev.to/mukulmantosh/streamlining-amis-using-packer-vault-github-actions-18g)
 
 ## DockerHub
  - [https://hub.docker.com/r/mukulmantosh/packerexercise](https://hub.docker.com/r/mukulmantosh/packerexercise)
